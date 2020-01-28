@@ -1,3 +1,3 @@
 # updating-inputs
 
-## inputs fileds displaying data from api call and updating data on value change
+## inputs fields displaying data from api call and updating data on value change
