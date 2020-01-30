@@ -5,14 +5,14 @@ import axios from 'axios'
 
 
 class App extends Component{
+  
      constructor(props){
        super(props)
-       this.state = {
+        this.state = {
          data:[],
-         currentValue: {}
-       }
+         currentValue:{},
+        }
      }
-
 
     componentDidMount(){
       this.getData()
@@ -22,21 +22,23 @@ class App extends Component{
     getData = () => {
       axios.get('http://localhost:8000').then(res => {
         this.setState({data: res.data})
-          res.data.map(item => {
+          res.data.map((item, i)=> {
+            return(
               this.setState({
-                  ["moh" + item._id] :  item.moh,
-                  ["boh" + item._id] : item.boh,
-                  ["total" + item._id] : item.total
+                ["moh" + i] : item.moh,
+                ["boh" + i] : item.boh,
+                ["total" + i] : item.total
               })
+            )
           })
       })
     }
 
     handleChange = (e) => {
       e.preventDefault()
-          this.setState({
-           [e.target.name] : e.target.value
-          })
+        this.setState({
+          [e.target.name] : e.target.value
+        })
     }
 
     handleFocus = (item) => {
@@ -51,7 +53,7 @@ class App extends Component{
         if(this.state.currentValue[name] !== e.target.value - ""){
           axios.put(`http://localhost:8000/${item._id}`, update).then(res => {
                  this.getData()
-                 console.log("old value:" + item[name] , "new value: " + res.data[name])
+                 console.log("old value: " + item[name] , " new value: " + res.data[name])
           })
         }
     }
@@ -61,28 +63,29 @@ class App extends Component{
         <div>
           {
            this.state.data.map((item, i) => {
+            
             return(
               <div key = {item._id} style = {{display: "flex", alignItems: "center", justifyContent: "center"}}>
                 <h2 style = {{margin: "10pt"}}>Item {i+1}</h2>
                  <input 
-                  name = {"moh"+item._id}
-                  value = {this.state["moh" + item._id]}
+                  name = {"moh" + i}
+                  value = {this.state["moh" + i] >= 0 ? this.state["moh" + i] : ""} // in order to avoid undefined value
                   onChange = {this.handleChange}
                   onFocus = {() => this.handleFocus(item)}
                   onBlur = {(e) => this.handleBlur(e, item)}
                  />
                
                 <input 
-                  name = {"boh"+item._id}
-                  value = {this.state["boh" + item._id]}
+                  name = {"boh"+i}
+                  value = {this.state["boh" + i] >= 0 ? this.state["boh" + i] : ""} 
                   onChange = {this.handleChange}
                   onFocus = {() => this.handleFocus(item)}
                   onBlur = {(e) => this.handleBlur(e, item)}
                 />
                
                 <input 
-                  name = {"total"+item._id}
-                  value = {this.state["total" + item._id]}
+                  name = {"total"+ i}
+                  value = {this.state["total" + i] >= 0 ? this.state["total" + i] : ""} 
                   onChange = {this.handleChange}
                   onFocus = {() => this.handleFocus(item)}
                   onBlur = {(e) => this.handleBlur(e, item)}

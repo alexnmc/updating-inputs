@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const dataSchema = new Schema({  
     moh: {
         type: Number,
-        
     },
 
     boh:{
